@@ -1,13 +1,14 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:15
     container_name: chatgay_db_cont
     restart: always
     volumes:
-      # Persistencia de datos en tu Bodega SSD
+      # Persistencia en tu Bodega SSD
       - ./data/postgres:/var/lib/postgresql/data
     environment:
-      # Docker lee estas variables directamente desde tu archivo .env
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -18,23 +19,14 @@ services:
     build: .
     container_name: chatgay_web_cont
     restart: on-failure
-    command: python src/manage.py runserver 0.0.0.0:8000
+    # CORRECCIÓN: Se quita 'src/' porque el volumen ya apunta a esa carpeta
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      # Sincroniza tu código de la carpeta src con el contenedor
       - ./src:/app
-      # Sincroniza los logs para auditoría PDI
       - ./data/logs:/app/data/logs
     env_file:
       - .env
     ports:
       - "8000:8000"
     depends_on:
-      db:
-        condition: service_healthy
-
-# Validación de salud para que la web no arranque antes que la DB
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - db
