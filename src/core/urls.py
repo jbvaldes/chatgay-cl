@@ -16,7 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.shortcuts import render
+
+# Vista temporal para la Landing Page de Auditoría
+def home(request):
+    return render(request, 'index.html')
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # INGENIERÍA: Cambiamos 'admin/' por una ruta secreta para seguridad
+    path('bodega-secreta-jorge-2026/', admin.site.urls),
+    path('', home, name='home'),
 ]

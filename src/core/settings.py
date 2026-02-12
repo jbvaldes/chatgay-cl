@@ -42,6 +42,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # EL RADAR DE JORGE:
+    'seguridad.middleware.AuditoriaPDIMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -49,7 +51,8 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # CORRECCIÓN: Le decimos a Django que busque en la carpeta templates de la raíz
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -112,3 +115,26 @@ LOGGING = {
         },
     },
 }
+
+# Seguridad de Cabeceras para Producción
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY' # Evita que tu sitio sea puesto en un iframe de otro
+
+# --- INGENIERÍA DE SEGURIDAD (HARDENING) ---
+
+# Evita que el sitio sea enmarcado por otros (Previene Clickjacking)
+X_FRAME_OPTIONS = 'DENY'
+
+# Bloquea intentos de adivinar el tipo de contenido (Previene Sniffing)
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Activa el filtro XSS del navegador
+SECURE_BROWSER_XSS_FILTER = True
+
+# Referrer Policy: Solo envía información de origen a tu propio sitio
+SECURE_REFERRER_POLICY = 'same-origin'
+
+# Configuración de Cookies seguras (Para cuando tengamos HTTPS)
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True

@@ -14,12 +14,18 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
+    # INGENIERÍA: El Healthcheck debe estar aquí para que Docker vigile la BD
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   web:
     build: .
     container_name: chatgay_web_cont
     restart: on-failure
-    # CORRECCIÓN: Se quita 'src/' porque el volumen ya apunta a esa carpeta
+    # Comando optimizado para el volumen /app
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./src:/app
@@ -29,4 +35,8 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
