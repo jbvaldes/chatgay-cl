@@ -17,13 +17,48 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.shortcuts import render
+from django.http import HttpResponse # Importado para SEO directo
 
-# Vista temporal para la Landing Page de Auditoría
+# --- VISTAS DEL PROYECTO CHATGAY.CL ---
+
 def home(request):
+    """Vista principal de auditoría y entrada"""
     return render(request, 'index.html')
 
+def terminos(request):
+    """Vista de advertencia legal y responsabilidad penal"""
+    return render(request, 'terminos.html')
+
+def publicidad(request):
+    """Vista para gestión de anuncios y micropagos"""
+    return render(request, 'publicidad.html')
+
+# --- BLOQUE SEO (Robots y Sitemap) ---
+
+def robots_txt(request):
+    content = "User-agent: *\nAllow: /\nDisallow: /bodega-secreta-jorge-2026/\nSitemap: https://chatgay.cl/sitemap.xml"
+    return HttpResponse(content, content_type="text/plain")
+
+def sitemap_xml(request):
+    content = """<?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url><loc>https://chatgay.cl/</loc><priority>1.0</priority></url>
+        <url><loc>https://chatgay.cl/terminos</loc><priority>0.8</priority></url>
+    </urlset>"""
+    return HttpResponse(content, content_type="application/xml")
+
+# --- CONFIGURACIÓN DE RUTAS ---
+
 urlpatterns = [
-    # INGENIERÍA: Cambiamos 'admin/' por una ruta secreta para seguridad
+    # INGENIERÍA: Ruta administrativa protegida (Bodega Secreta)
     path('bodega-secreta-jorge-2026/', admin.site.urls),
+    
+    # FRONTEND
     path('', home, name='home'),
+    path('terminos/', terminos, name='terminos'),
+    path('contacto-publicidad/', publicidad, name='publicidad'),
+    
+    # SEO ASSETTS
+    path('robots.txt', robots_txt),
+    path('sitemap.xml', sitemap_xml),
 ]
