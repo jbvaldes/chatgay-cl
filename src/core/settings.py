@@ -51,11 +51,15 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # CORRECCIÓN: Le decimos a Django que busque en la carpeta templates de la raíz
-        'DIRS': [BASE_DIR / 'templates'],
+        # CORRECCIÓN: Buscamos en la raíz y en la carpeta src si existe
+        'DIRS': [
+            BASE_DIR / 'templates',
+            BASE_DIR / 'src' / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -92,8 +96,16 @@ TIME_ZONE = 'America/Santiago'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# --- CONFIGURACIÓN DE ARCHIVOS ESTÁTICOS ---
 STATIC_URL = 'static/'
+# CORRECCIÓN: Dónde se recolectan los archivos en producción (GCP)
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+# CORRECCIÓN: Carpetas adicionales donde buscar archivos estáticos (CSS, JS)
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+    BASE_DIR / 'src' / 'static',
+]
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # --- CONFIGURACIÓN DE AUDITORÍA PDI ---
@@ -104,7 +116,7 @@ LOGGING = {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': os.getenv('AUDIT_LOG_PATH', '/app/data/logs/auditoria_pdi.log'),
+            'filename': os.getenv('AUDIT_LOG_PATH', 'auditoria_pdi.log'),
         },
     },
     'loggers': {
@@ -116,25 +128,14 @@ LOGGING = {
     },
 }
 
-# Seguridad de Cabeceras para Producción
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY' # Evita que tu sitio sea puesto en un iframe de otro
-
 # --- INGENIERÍA DE SEGURIDAD (HARDENING) ---
-
-# Evita que el sitio sea enmarcado por otros (Previene Clickjacking)
-X_FRAME_OPTIONS = 'DENY'
-
-# Bloquea intentos de adivinar el tipo de contenido (Previene Sniffing)
-SECURE_CONTENT_TYPE_NOSNIFF = True
-
-# Activa el filtro XSS del navegador
 SECURE_BROWSER_XSS_FILTER = True
-
-# Referrer Policy: Solo envía información de origen a tu propio sitio
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
 SECURE_REFERRER_POLICY = 'same-origin'
 
-# Configuración de Cookies seguras (Para cuando tengamos HTTPS)
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
+# Configuración de Cookies seguras (Activar solo con SSL/HTTPS)
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
