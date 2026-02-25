@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /private/
+Disallow: /config/
+
+# Mapa del sitio para Google
+Sitemap: https://www.chatgay.cl/sitemap.xml
