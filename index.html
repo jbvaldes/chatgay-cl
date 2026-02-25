@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row min-vh-75 align-items-center justify-content-center text-center">
+    <div class="col-12 col-md-10 col-lg-8 px-4">
+        <h1 class="display-1 fw-bold mb-4" style="font-family: 'Orbitron', sans-serif; background: var(--rainbow); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));">
+            CHATGAY.CL
+        </h1>
+        
+        <p class="h4 mb-5 text-uppercase tracking-widest" style="letter-spacing: 5px; color: #aaa;">
+            Conecta, Comparte y Brilla
+        </p>
+
+        <div class="p-5 rounded-4" style="background: rgba(20, 20, 20, 0.8); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px);">
+            <h2 class="h3 mb-4 fw-bold text-uppercase">¡Hola! Qué bueno verte</h2>
+            <p class="mb-4 text-secondary">
+                Esta es una comunidad privada exclusiva para nuestra comunidad en Chile. 
+                Al ingresar, confirmas que eres mayor de edad y aceptas nuestras normas de convivencia.
+            </p>
+            
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                <button onclick="checkAge()" class="btn btn-lg px-5 py-3 fw-bold text-white rounded-pill" style="background: var(--rainbow); border: none; transition: 0.3s; box-shadow: 0 0 20px rgba(255,255,255,0.1);">
+                    ENTRAR AL CHAT
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function checkAge() {
+        Swal.fire({
+            title: 'Términos y Condiciones',
+            html: `
+                <div class="text-start small p-3" style="max-height: 200px; overflow-y: auto; background: #000; color: #aaa; border: 1px solid #333; font-family: 'Rajdhani', sans-serif;">
+                    <p class="text-white fw-bold">Bienvenido a ChatGay.cl</p>
+                    <p><b>1. Uso del Sitio:</b> Al entrar declaras tener 18 años o más.</p>
+                    <p><b>2. Seguridad:</b> Registramos datos técnicos de conexión para auditoría legal interna conforme a la ley chilena.</p>
+                    <p><b>3. Respeto:</b> No se permite el acoso ni conductas ilícitas.</p>
+                </div>
+                <p class="mt-3 small text-white">¿Aceptas estos términos para ingresar?</p>
+            `,
+            background: '#111',
+            color: '#fff',
+            showCancelButton: true,
+            confirmButtonColor: '#43a047',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ACEPTO Y ENTRAR',
+            cancelButtonText: 'SALIR',
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirige a la página del chat
+                window.location.href = "/chat";
+            } else {
+                window.location.href = "https://www.google.com";
+            }
+        });
+    }
+</script>
+{% endblock %}
