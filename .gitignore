@@ -3,7 +3,11 @@ cat <<EOF > .gitignore
 __pycache__/
 .env
 db.sqlite3
+db_data/
 data/
 venv/
 .vscode/
+src/staticfiles/
+src/auditoria_pdi.log
+.DS_Store
 EOF
