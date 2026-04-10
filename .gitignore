@@ -1,9 +1,60 @@
-cat <<EOF > .gitignore
-*.pyc
-__pycache__/
-.env
-db.sqlite3
-data/
-venv/
+```
+# Compiled and build artifacts
+*.css.map
+*.js.map
+*.min.css
+*.min.js
+dist/
+build/
+.sass-cache/
+
+# Dependencies
+node_modules/
+
+# Editors
 .vscode/
-EOF
+.idea/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Python specific
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.coverage
+htmlcov/
+.coverage.*
+.pytest_cache/
+.mypy_cache/
+
+# Distribution / packaging
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.gitattributes
+.project
+.pydevproject
+.vscode/settings.json
+```
